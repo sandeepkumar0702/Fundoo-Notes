@@ -51,3 +51,35 @@ export const getAllUsers = async () => {
   return await User.find({}, "-password"); // Exclude passwords for security
 };
 
+
+
+let otpStore=null;
+export const forgotPassword = async ({ email }) => {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+        throw { status: 404, message: 'User not found' };
+    }
+
+    otpStore = Math.floor(100000 + Math.random() * 900000).toString();
+    // console.log(`OTP for ${email}: ${otp}`);
+    return { message: `OTP : ${otpStore} `};
+};
+
+export const resetPassword = async ({ email, otp, password }) => {
+    console.log(otpStore)
+    if (!otpStore || otpStore!== otp) {
+        throw { status: 400, message: 'Expired OTP' };
+    }
+    const user = await User.findOne({ email });
+    console.log(user);
+    if (!user) {
+        throw { status: 404, message: 'User not found' };
+    }
+    console.log(password)
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    await user.save();
+    otpStore=null;
+    return { message: 'Password updated successfully' };
+};
