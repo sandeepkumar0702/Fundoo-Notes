@@ -18,4 +18,12 @@ router.get("/getUsers",userAuth,userController.getAllUsers);
 // router.get("/getUsers",userController.getAllUsers);
 
 
+//forgot pass
+router.post('/forget',userController.forgotPassword);
+
+
+//reset pass
+router.post('/resetPassword', userController.resetPassword);
+
+
 export default router;
