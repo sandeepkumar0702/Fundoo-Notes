@@ -46,3 +46,25 @@ export const getAllUsers = async (req, res, next) => {
 };
 
 
+
+//forgot pass
+export const forgotPassword = async (req, res) => {
+  try {
+      const response = await UserService.forgotPassword(req.body);
+      res.json(response);
+  } catch (error) {
+      res.status(error.status || 500).json({ message: error.message || 'Server error' });
+  }
+};
+
+
+//reste pass
+export const resetPassword = async (req, res) => {
+  try {
+      const response = await UserService.resetPassword(req.body);
+      res.json(response);
+  } catch (error) {
+      res.status(error.status || 500).json({ message: error.message || 'Server error' });
+  }
+};
+

@@ -53,3 +53,37 @@ export const getAllUsers = async () => {
 
 
 
+let otpStore=null;
+export const forgotPassword = async ({ email }) => {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+        throw { status: 404, message: 'User not found' };
+    }
+
+    otpStore = Math.floor(100000 + Math.random() * 900000).toString();
+    // console.log(`OTP for ${email}: ${otp}`);
+    return { message: `OTP : ${otpStore} `};
+};
+
+export const resetPassword = async ({ email, otp, password }) => {    
+    console.log(otpStore)
+    if (!otpStore || otpStore!== otp) {
+        throw { status: 400, message: 'Expired OTP' };
+    }
+    const user = await User.findOne({ email });
+    console.log(user);
+    if (!user) {
+        throw { status: 404, message: 'User not found' };
+    }
+    // console.log(password)
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+    if (!passwordRegex.test(password)) {
+      throw { status: 400, message: 'Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character' };
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    await user.save();
+    otpStore=null;
+    return { message: 'Password updated successfully' };
+};
