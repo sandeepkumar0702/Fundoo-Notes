@@ -1,0 +1,348 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Fundoo Notes API",
+    "version": "1.0.0",
+    "description": "API documentation for the Notes application"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local server"
+    }
+  ],
+  "paths": {
+    "/users/register": {
+      "post": {
+        "summary": "Register a new user",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "johndoe@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Password@123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User registered successfully" },
+          "400": { "description": "Bad request, missing fields" }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "summary": "User login",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "johndoe@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Password@123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login successful, returns token" },
+          "401": { "description": "Unauthorized, invalid credentials" }
+        }
+      }
+    },
+    "/users/getUsers": {
+      "get": {
+        "summary": "Get all users",
+        "tags": ["Users"],
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "List of users" },
+          "401": { "description": "Unauthorized, missing token" }
+        }
+      }
+    },
+    "/users/forget": {
+      "post": {
+        "summary": "Forgot password",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "johndoe@example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Password reset link sent" },
+          "404": { "description": "User not found" }
+        }
+      }
+    },
+    "/users/resetPassword": {
+      "post": {
+        "summary": "Reset password",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "sandy@gmail.com"
+                  },
+                  "otp": {
+                    "type": "string",
+                    "example": "112345"
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "example": "Password@123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Password reset successfully" },
+          "400": { "description": "Invalid or expired token" }
+        }
+      }
+    },
+    "/notes": {
+      "post": {
+        "summary": "Create a new note",
+        "tags": ["Notes"],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Meeting Notes"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Discuss project roadmap"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Note created successfully" },
+          "400": { "description": "Bad request, missing fields" }
+        }
+      },
+      "get": {
+        "summary": "Get all notes",
+        "tags": ["Notes"],
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Successfully fetched notes" },
+          "401": { "description": "Unauthorized, missing token" }
+        }
+      }
+    },
+    "/notes/{id}": {
+      "get": {
+        "summary": "Get a note by ID",
+        "tags": ["Notes"],
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "The note ID"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Note fetched successfully" },
+          "404": { "description": "Note not found" }
+        }
+      },
+      "put": {
+        "summary": "Update a note by ID",
+        "tags": ["Notes"],
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "The note ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Updated Note Title"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Updated description content"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Note updated successfully" },
+          "404": { "description": "Note not found" }
+        }
+      },
+      "delete": {
+        "summary": "Delete (or move to trash) a note by ID",
+        "tags": ["Notes"],
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "The note ID"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Note deleted successfully" },
+          "404": { "description": "Note not found" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "64b8f9e4c7e6f5a2b8b9f9a3"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "phoneNo": {
+            "type": "integer",
+            "example": 1234567890
+          },
+          "password": {
+            "type": "string",
+            "example": "securePassword123"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-02-13T14:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-02-14T10:15:00Z"
+          }
+        }
+      },
+      "Note": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "64b8f9e4c7e6f5a2b8b9f9a2"
+          },
+          "title": {
+            "type": "string",
+            "example": "Meeting Notes"
+          },
+          "description": {
+            "type": "string",
+            "example": "Discuss project roadmap"
+          },
+          "trash": {
+            "type": "boolean",
+            "default": false
+          },
+          "userId": {
+            "type": "string",
+            "example": "64b8f9e4c7e6f5a2b8b9f9a3"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-02-13T14:30:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-02-14T10:15:00Z"
+          }
+        }
+      }
+    }
+  }
+}
