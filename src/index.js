@@ -12,6 +12,8 @@ import {
   genericErrorHandler,
   notFound
 } from './middlewares/error.middleware';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './swagger/Swagger.json';
 import logger, { logStream } from './config/logger';
 
 import morgan from 'morgan';
@@ -29,6 +31,7 @@ app.use(morgan('combined', { stream: logStream }));
 
 database();
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/", routes());
 app.use(appErrorHandler);
 app.use(genericErrorHandler);
