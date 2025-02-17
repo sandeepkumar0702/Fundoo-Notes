@@ -64,30 +64,3 @@ This project is a REST API built using Node.js and Express.js, implementing user
 | GET    | `/:id`     | Get a specific note by ID    | Yes           |
 | PUT    | `/:id`     | Update a note by ID          | Yes           |
 | DELETE | `/:id`     | Delete a note by ID          | Yes           |
-
-## Project Structure
-
-```
-/project-root
-│── /controllers       # Business logic for routes
-│── /middlewares       # Authentication and other middleware
-│── /routes            # API routes
-│── /validators        # Request validation logic
-│── /models            # Database models
-│── server.js          # Entry point of the application
-│── package.json       # Project dependencies
-│── .env               # Environment variables
-│── README.md          # Project documentation
-```
-
-## Contributing
-
-1. Fork the repository.
-2. Create a new branch (`feature-branch`).
-3. Commit your changes.
-4. Push to your forked repo.
-5. Create a pull request.
-
-## License
-
-This project is licensed under the MIT License.
